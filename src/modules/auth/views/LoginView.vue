@@ -69,6 +69,7 @@ const onLogin = async () => {
   const ok = await authStore.login(loginForm.username, loginForm.password);
 
   if (ok) {
+    toast.success('Inicio de sesión correcto');
     router.push({ name: 'profile' });
   } else {
     toast.error('Usuario o Contraseña incorrectos');

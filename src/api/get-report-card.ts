@@ -1,15 +1,15 @@
-import { CobachApi } from "@/api/CobachApi";
+import { CobachApi } from "./CobachApi";
 import { useAuthStore } from "@/modules/auth/stores/auth.store";
 
 const authStore = useAuthStore();
 const matricula = authStore.student?.MATRICULA
 // console.log(matricula)
 
-export const getAcademicHistory = async () => {
+export const getAcademicReport = async () => {
 
   try {
 
-    const { data } = await CobachApi.get(`/students/${matricula}/loads/semiannual`)
+    const { data } = await CobachApi.get(`/students/${matricula}/loads`)
 
     console.log("trae peticion", data)
 

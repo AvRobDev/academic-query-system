@@ -46,6 +46,5 @@ import { useQuery } from '@tanstack/vue-query';
 const { data: student } = useQuery({
   queryKey: ['student'],
   queryFn: () => getStudent(),
-  staleTime: 1000 * 120,
 });
 </script>
