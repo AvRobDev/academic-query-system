@@ -1,19 +1,22 @@
-import { CobachApi } from "@/api/CobachApi";
+// import { CobachApi } from "@/api/CobachApi";
+// import { useAuthStore } from "@/modules/auth/stores/auth.store";
 
+// export const getStudent = async () => {
+//   try {
+//     const authStore = useAuthStore();
 
-export const getStudent = async () => {
+//     const matricula = authStore.studentname;
+//     // console.log(matricula)
+//     // if (!matricula) {
+//     //   throw new Error('No hay información del estudiante disponible.');
+//     // }
 
-  try {
+//     const { data } = await CobachApi.get(`/students/${matricula}`);
+//     console.log(data);
 
-    const { data } = await CobachApi.get(`/students/${'22A0710217M0001'}`)
-
-    console.log(data)
-
-    return data
-
-  } catch (error) {
-    console.log(error);
-    throw new Error('Error al obtener estudiante')
-  }
-
-}
+//     return data;
+//   } catch (error) {
+//     console.error(error);
+//     throw new Error('Error al obtener estudiante');
+//   }
+// };

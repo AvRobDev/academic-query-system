@@ -1,13 +1,20 @@
 import axios from "axios";
-
-const apiKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbnJvbGxtZW50IjoiMjJBMDcxMDIxN00wMDAxIiwiZXhwIjoxNzMyOTEzOTY1fQ.sEsjl_PxTZVVRy3GxBNd5RrntqxFZMrz-JDOx8lv01w'
+import { storeToRefs } from "pinia";
+import { useAuthStore } from "@/modules/auth/stores/auth.store";
 
 const CobachApi = axios.create({
   baseURL: import.meta.env.VITE_COBACH_API_URL,
-  headers: {
-    Authorization: `Bearer ${apiKey}`
-  }
-})
+});
 
-//TODO:
-export { CobachApi }
+CobachApi.interceptors.request.use((config) => {
+  const authStore = useAuthStore();
+  const { token } = storeToRefs(authStore);
+
+  if (token.value) {
+    config.headers.Authorization = `Bearer ${token.value}`;
+  }
+
+  return config;
+});
+
+export { CobachApi };

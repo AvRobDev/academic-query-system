@@ -1,31 +1,29 @@
-// import SideMenu from '@/modules/academic/components/SideMenu.vue'
-import UserProfile from '@/modules/academic/layouts/UserProfile.vue'
+import { authRoutes } from '@/modules/auth/routes'
+// import UserProfile from '@/modules/auth/layouts/UserProfile.vue'
+// import UserProfile from '@/modules/auth/layouts/UserProfile.vue'
 import { createRouter, createWebHistory } from 'vue-router'
-// import HomeView from '../views/HomeView.vue'
+
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
     {
       path: '/',
-      name: 'home',
-      component: UserProfile,
+      name: 'auth',
+      redirect: { name: 'login' },
+      component: () => import('@/modules/auth/layouts/AuthLayout.vue'),
       children: [
         {
-          path: '',
-          name: 'profile',
-          component: () => import('@/modules/academic/views/ProfileBody.vue'),
+          path: 'login',
+          name: 'login',
+          component: () => import('@/modules/auth/views/LoginView.vue')
+
         }
       ]
     },
-    // {
-    //   path: '/about',
-    //   name: 'about',
-    //   // route level code-splitting
-    //   // this generates a separate chunk (About.[hash].js) for this route
-    //   // which is lazy-loaded when the route is visited.
-    //   component: () => import('../views/AboutView.vue'),
-    // },
+
+    // //Auth Routes
+    ...authRoutes,
   ],
 })
 

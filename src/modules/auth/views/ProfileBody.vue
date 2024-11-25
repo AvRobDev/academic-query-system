@@ -3,12 +3,7 @@
     <h1 class="text-center"><strong>COLEGIO DE BACHILLERES DE CHIAPAS No. 217</strong></h1>
     <h3 class="plantel-name text-center">SOCONUSCO, CHIAPAS</h3>
     <div class="p-4 mb-2 bg-transparent text-body"></div>
-
-    <div v-if="isLoading" class="text-center">
-      <h1>Cargando...</h1>
-    </div>
-
-    <div v-else class="row">
+    <div class="row">
       <div class="col-md-6 text-center">
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -24,8 +19,8 @@
           <path d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6z" />
         </svg>
         <div class="p-4 mb-2 bg-transparent text-body"></div>
-        <h3><strong>Semestre:</strong> {{ student.GRADO }}</h3>
-        <h3><strong>Nombre:</strong> {{ student.NOMBRES }}</h3>
+        <h3><strong>Semestre:</strong> {{ student?.GRADO || 'Cargando...' }}</h3>
+        <h3><strong>Nombre:</strong> {{ student?.GRUPO }}</h3>
       </div>
       <div class="col-md-6 my-4 text-center">
         <h2><strong>Nombre:</strong></h2>
@@ -45,10 +40,10 @@
 </template>
 
 <script lang="ts" setup>
-import { getStudent } from '@/modules/student/actions';
+import { getStudent } from '@/api/get-students';
 import { useQuery } from '@tanstack/vue-query';
 
-const { data: student, isLoading } = useQuery({
+const { data: student } = useQuery({
   queryKey: ['student'],
   queryFn: () => getStudent(),
   staleTime: 1000 * 120,
