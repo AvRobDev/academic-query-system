@@ -44,4 +44,5 @@ import { useAuthStore } from '@/stores/auth.store';
 
 const authStore = useAuthStore();
 const student = authStore.user;
+console.log(student);
 </script>
