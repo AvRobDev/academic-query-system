@@ -6,7 +6,8 @@ import { useLocalStorage } from '@vueuse/core';
 
 export const useAuthStore = defineStore('auth', () => {
   const authStatus = ref<AuthStatus>(AuthStatus.Checking);
-  const student = ref<StudentData | undefined>(); // Usamos useLocalStorage
+  const student = ref<StudentData | undefined>();
+  const studentStorage = ref(useLocalStorage('usern', undefined))
   const token = ref(useLocalStorage('token', ''));
 
   const login = async (username: string, password: string) => {
@@ -41,6 +42,7 @@ export const useAuthStore = defineStore('auth', () => {
     student,
     token,
     authStatus,
+    studentStorage,
 
     isChecking: computed(() => authStatus.value === AuthStatus.Checking),
     isAuthenticated: computed(() => authStatus.value === AuthStatus.Authenticated),

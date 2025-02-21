@@ -37,7 +37,7 @@
           </tbody>
         </table>
         <div class="text-center">
-          <h5 class="text-secondary">Promedio Final:</h5>
+          <h5 class="text-secondary">Promedio Final:{{ student?. }}</h5>
         </div>
       </div>
     </div>
