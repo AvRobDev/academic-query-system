@@ -1,10 +1,10 @@
 // stores/auth.store.ts
 import { defineStore } from 'pinia';
-import { loginAction } from '@/modules/auth/actions'; // Importa la función de inicio de sesión
-import type { StudentData } from '@/modules/auth/interfaces'; // Asegúrate de importar la interfaz correcta
+import { loginAction } from '@/modules/auth/actions';
+import type { StudentData } from '@/modules/auth/interfaces';
 
 interface AuthState {
-  user: StudentData | null; // Cambia User por StudentData
+  user: StudentData | null;
   token: string | null;
 }
 
@@ -14,22 +14,22 @@ export const useAuthStore = defineStore('auth', {
     token: null,
   }),
   actions: {
-    setUser(user: StudentData) { // Cambia User por StudentData
+    setUser(user: StudentData) {
       this.user = user;
-      localStorage.setItem('user', JSON.stringify(user)); // Almacena los datos del usuario en localStorage
+      localStorage.setItem('user', JSON.stringify(user));
     },
     setToken(token: string) {
       this.token = token;
-      localStorage.setItem('token', token); // Almacena el token en localStorage
+      localStorage.setItem('token', token);
     },
+    // logout funcion
     clearUser() {
       this.user = null;
       this.token = null;
-      localStorage.removeItem('user'); // Elimina los datos del usuario de localStorage
-      localStorage.removeItem('token'); // Elimina el token de localStorage
+      localStorage.removeItem('user');
+      localStorage.removeItem('token');
     },
     restoreAuthState() {
-      // Restaura el estado del usuario desde localStorage al cargar la aplicación
       const user = localStorage.getItem('user');
       const token = localStorage.getItem('token');
       if (user && token) {
@@ -39,17 +39,17 @@ export const useAuthStore = defineStore('auth', {
     },
     async login(username: string, password: string): Promise<boolean> {
       try {
-        const result = await loginAction(username, password); // Llama a la función de inicio de sesión
+        const result = await loginAction(username, password);
         if (result.ok) {
-          this.setUser(result.user); // Actualiza el estado del usuario
-          this.setToken(result.token); // Actualiza el token
-          return true; // Indica que el inicio de sesión fue exitoso
+          this.setUser(result.user);
+          this.setToken(result.token);
+          return true;
         } else {
-          return false; // Indica que el inicio de sesión falló
+          return false;
         }
       } catch (error) {
         console.error('Error during login:', error);
-        return false; // Indica que el inicio de sesión falló
+        return false;
       }
     },
   },
