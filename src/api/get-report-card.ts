@@ -5,17 +5,17 @@ export const getAcademicReport = async (matricula: string) => {
     const { data } = await CobachApi.get(`/students/${matricula}/loads`);
     return data;
   } catch (error) {
-    console.error('Error al obtener estudiante', error);
-    throw new Error('Error al obtener estudiante');
+    console.error('Periodo académico no completado o no existe el registro.', error);
+    throw new Error('Periodo académico no completado o no existe el registro.');
   }
 };
 
-export const getHistories = async (matricula: string, rank: number) => {
+export const getHistories = async (matricula: string, rank: number, partial: number) => {
   try {
-    const { data } = await CobachApi.get(`/students/${matricula}/histories/semiannual?rank=${rank}`);
+    const { data } = await CobachApi.get(`/students/${matricula}/histories/?rank=${rank}&partial=${partial}`);
     return data;
   } catch (error) {
-    console.error('Error al obtener el historial', error);
-    throw new Error('Error al obtener el historial');
+    console.error('Periodo académico no completado o no existe el registro.', error);
+    throw new Error('Periodo académico no completado o no existe el registro.');
   }
 };

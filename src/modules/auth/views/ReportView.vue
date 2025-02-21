@@ -58,7 +58,6 @@
                 <td>{{ carga.OBSERVA }}</td>
                 <td>{{ carga[selectedPartial] }}</td>
                 <td>{{ carga.FALTAS }}</td>
-                <!-- Asegúrate de que este campo exista en la API -->
               </tr>
             </tbody>
           </table>
@@ -91,6 +90,13 @@ const histories = ref<any[]>([]); // Almacena los datos de la API
 const ranks = ref([1, 2, 3, 4, 5]); // Grados disponibles
 const partials = ref(['PARCIAL_1', 'PARCIAL_2', 'PARCIAL_3']); // Parciales disponibles
 
+// Mapeo de parciales a números
+const partialToNumberMap = {
+  PARCIAL_1: 1,
+  PARCIAL_2: 2,
+  PARCIAL_3: 3,
+};
+
 // Obtener datos del estudiante (desde la API)
 const fetchStudentData = async () => {
   loading.value = true;
@@ -101,7 +107,7 @@ const fetchStudentData = async () => {
     academiReport.value = data;
   } catch (err) {
     toast.error('Error con la conexión a la API');
-    error.value = 'No se pudo obtener el historial académico.';
+    error.value = 'Periodo académico no completado o no existe el registro.';
     console.error(err);
   } finally {
     loading.value = false;
@@ -109,12 +115,13 @@ const fetchStudentData = async () => {
 };
 
 // Obtener los historiales según el grado y parcial seleccionados
-const fetchHistories = async (rank: number) => {
+const fetchHistories = async (rank: number, partial: string) => {
   try {
-    const data = await getHistories(matricula, rank);
+    const partialNumber = partialToNumberMap[partial]; // Convertir el parcial a número
+    const data = await getHistories(matricula, rank, partialNumber);
     histories.value = data.HISTORIAL; // Almacena los datos del historial
   } catch (err) {
-    toast.error('Error al obtener el historial');
+    toast.error('Periodo académico no completado o no existe el registro.');
     console.error(err);
   }
 };
@@ -122,7 +129,7 @@ const fetchHistories = async (rank: number) => {
 // Observar cambios en el grado o parcial seleccionado
 watch([selectedRank, selectedPartial], ([newRank, newPartial]) => {
   if (newRank !== null && newPartial !== null) {
-    fetchHistories(newRank); // Realiza la consulta a la API con el grado seleccionado
+    fetchHistories(newRank, newPartial); // Realiza la consulta a la API con el grado y parcial seleccionados
   }
 });
 
@@ -137,5 +144,12 @@ const filteredData = computed(() => {
   }));
 });
 
-onMounted(fetchStudentData);
+onMounted(() => {
+  // Inicializar con el primer grado y parcial si es necesario
+  if (ranks.value.length > 0 && partials.value.length > 0) {
+    selectedRank.value = ranks.value[0];
+    selectedPartial.value = partials.value[0];
+  }
+  fetchStudentData();
+});
 </script>
