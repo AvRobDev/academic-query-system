@@ -4,7 +4,7 @@
     <div v-else-if="error" class="text-danger">Error: {{ error }}</div>
     <div v-else>
       <div class="col-md-10">
-        <h5>Concentrado de calificaciones correspondiente al semestral {{ student?.GRADO }}</h5>
+        <h5>Concentrado de calificaciones correspondiente al semestral {{ user?.GRADO }}</h5>
       </div>
       <!-- Aquí puedes renderizar el resto de los datos como en tu tabla -->
       <div class="card-body">
@@ -23,10 +23,10 @@
           <tbody>
             <tr>
               <td class="text-white bg-secondary" colspan="6">
-                Estatus academico - {{ student?.STATUSA }}
+                Estatus academico - {{ user?.STATUSA }}
               </td>
             </tr>
-            <tr v-for="(carga, index) in student?.CARGA" :key="index">
+            <tr v-for="(carga, index) in academicHistory?.CARGA" :key="index">
               <td>{{ carga.DATOS_MATERIA.ASIGNATURA }}</td>
               <td class="text-center">{{ carga.STATUSA || 'N/A' }}</td>
               <td class="text-center">{{ carga.PARCIAL_1 || 'Sin datos' }}</td>
@@ -37,7 +37,9 @@
           </tbody>
         </table>
         <div class="text-center">
-          <h5 class="text-secondary">Promedio Final:{{ student?. }}</h5>
+          <h5 class="text-secondary">
+            Promedio Final: {{ academicHistory?.DETALLES.PROMEDIO_FINAL }}
+          </h5>
         </div>
       </div>
     </div>
@@ -46,23 +48,33 @@
 
 <script lang="ts" setup>
 import { ref, onMounted } from 'vue';
+import { useAuthStore } from '@/modules/auth/stores/auth.store';
 import { getAcademicHistory } from '@/api/get-academic-history';
 import { useToast } from 'vue-toastification';
 
-const student = ref(null);
+const authStore = useAuthStore();
+const user = authStore.user;
+const matricula = user?.MATRICULA;
+
+const academicHistory = ref(null);
 const loading = ref(true);
 const error = ref<string | null>(null);
 const toast = useToast();
 
-const fetchStudentData = async () => {
+// Obtener datos del estudiante (desde la API)
+const fetchAcademicHistory = async () => {
   loading.value = true;
   error.value = null;
 
   try {
-    const data = await getAcademicHistory();
-    student.value = data;
+    if (!matricula) {
+      throw new Error('No se pudo obtener la matrícula del usuario.');
+    }
+
+    const data = await getAcademicHistory(matricula);
+    academicHistory.value = data;
   } catch (err) {
-    toast.error('Error con la conexion a la API');
+    toast.error('Error con la conexión a la API');
     error.value = 'No se pudo obtener el historial académico.';
     console.error(err);
   } finally {
@@ -70,5 +82,5 @@ const fetchStudentData = async () => {
   }
 };
 
-onMounted(fetchStudentData);
+onMounted(fetchAcademicHistory);
 </script>

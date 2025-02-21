@@ -6,7 +6,7 @@
       <div class="card" ref="reportContent">
         <div class="card-header">
           <div class="d-flex justify-content-between align-items-center">
-            <p class="mb-0">{{ student.NOMBRES }} {{ student.APELLIDOS }}</p>
+            <p class="mb-0">{{ academiReport.NOMBRES }} {{ academiReport.APELLIDOS }}</p>
             <button type="button" class="btn btn-primary w-40" @click="generatePDF">
               Descargar PDF
             </button>
@@ -33,7 +33,7 @@
                   1° parcial
                 </th>
               </tr>
-              <tr v-for="(carga, index) in student?.CARGA" :key="index">
+              <tr v-for="(carga, index) in academiReport?.CARGA" :key="index">
                 <th scope="row">{{ carga.DATOS_MATERIA.ASIGNATURA }}</th>
                 <td>N</td>
                 <td>{{ carga.PARCIAL_1 }}</td>
@@ -51,20 +51,28 @@
 import { ref, onMounted } from 'vue';
 import { useToast } from 'vue-toastification';
 import { getAcademicReport } from '@/api/get-report-card';
+import { useAuthStore } from '@/modules/auth/stores/auth.store';
 import jsPDF from 'jspdf';
 
+const authStore = useAuthStore();
+const user = authStore.user; // Accede a los datos del usuario desde el store
+const matricula = user?.MATRICULA;
+
+const academiReport = ref(null);
 const student = ref(null);
 const loading = ref(true);
 const error = ref<string | null>(null);
 const toast = useToast();
 
+// Obtener datos del estudiante (desde la API)
 const fetchStudentData = async () => {
   loading.value = true;
   error.value = null;
 
   try {
-    const data = await getAcademicReport();
-    student.value = data;
+    const data = await getAcademicReport(matricula);
+    academiReport.value = data;
+    console.log(data);
   } catch (err) {
     toast.error('Error con la conexión a la API');
     error.value = 'No se pudo obtener el historial académico.';
@@ -76,9 +84,9 @@ const fetchStudentData = async () => {
 
 onMounted(fetchStudentData);
 
-// Generar PDF personalizado
+// Generar PDF (No esta configurado aun para obtener la informacion de la API)
 const generatePDF = () => {
-  if (!student.value) return;
+  if (!academiReport.value) return;
 
   const pdf = new jsPDF({
     orientation: 'portrait',

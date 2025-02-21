@@ -1,5 +1,6 @@
 import { authRoutes } from '@/modules/auth/routes';
 import { createRouter, createWebHistory } from 'vue-router';
+import { useAuthStore } from '@/stores/auth.store';
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -22,17 +23,20 @@ const router = createRouter({
   ],
 });
 
-// Guard para redirigir al login solo en rutas protegidas
 router.beforeEach((to, from, next) => {
-  // Lista de rutas protegidas (aquí puedes agregar las rutas que requieran redirección)
-  const protectedRoutes = ['profile', 'grades', 'history']; // Nombres de las rutas protegidas
+  const authStore = useAuthStore();
+  const protectedRoutes = ['profile', 'grades', 'history']; // Rutas protegidas
 
-  // Verifica si la ruta actual es una ruta protegida
   if (protectedRoutes.includes(to.name as string)) {
-    // Redirige al login si está en una ruta protegida
-    next({ name: 'login' });
+    if (!authStore.token) {
+      // Si no hay token, redirige al login
+      next({ name: 'login' });
+    } else {
+      // Permite el acceso si hay un token
+      next();
+    }
   } else {
-    // Permite la navegación normal si no es una ruta protegida
+    // Permite el acceso a rutas no protegidas
     next();
   }
 });

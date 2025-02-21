@@ -40,11 +40,8 @@
 </template>
 
 <script lang="ts" setup>
-import { getStudent } from '@/api/get-students';
-import { useQuery } from '@tanstack/vue-query';
+import { useAuthStore } from '@/stores/auth.store';
 
-const { data: student } = useQuery({
-  queryKey: ['student'],
-  queryFn: () => getStudent(),
-});
+const authStore = useAuthStore();
+const student = authStore.user;
 </script>

@@ -66,7 +66,7 @@ const onLogin = async () => {
     return passwordInputRef.value?.focus();
   }
 
-  const ok = await authStore.login(loginForm.username, loginForm.password);
+  const ok = await authStore.login(loginForm.username, loginForm.password); // Llama a la acción `login` del store
 
   if (ok) {
     toast.success('Inicio de sesión correcto');
