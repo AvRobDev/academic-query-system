@@ -4,7 +4,7 @@
     <div v-else-if="error" class="text-danger">Error: {{ error }}</div>
     <div v-else>
       <div class="col-md-10">
-        <h5>Concentrado de calificaciones correspondiente al semestral {{ user?.GRADO }}</h5>
+        <h5>Concentrado de calificaciones correspondiente al semestre {{ user?.GRADO }}</h5>
       </div>
       <!-- Selector de semestre (rank) -->
       <div class="mb-3">
