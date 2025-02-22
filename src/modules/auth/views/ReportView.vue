@@ -1,33 +1,28 @@
 <template>
   <div>
+    <!-- Mensajes de carga y error -->
     <div v-if="loading">Cargando datos...</div>
     <div v-else-if="error" class="text-danger">Error: {{ error }}</div>
     <div v-else>
       <div class="card" ref="reportContent">
         <div class="card-header">
           <div class="d-flex justify-content-between align-items-center">
+            <!-- Nombre del estudiante -->
             <p class="mb-0">{{ academiReport.NOMBRES }} {{ academiReport.APELLIDOS }}</p>
+            <!-- Botón para descargar PDF -->
             <button type="button" class="btn btn-primary w-40" @click="generatePDF">
               Descargar PDF
             </button>
             <div class="d-flex gap-2">
-              <!-- Selector de grado (rank) -->
-              <select
-                v-model="selectedRank"
-                class="form-select w-auto"
-                aria-label="Seleccionar grado"
-              >
-                <option disabled value="">Seleccionar grado</option>
+              <!-- Selector de grado -->
+              <select v-model="selectedRank" class="form-select w-auto" aria-label="Seleccionar grado">
+                <option disabled value="">Seleccionar semestre</option>
                 <option v-for="rank in ranks" :key="rank" :value="rank">
                   {{ rank }}
                 </option>
               </select>
-              <!-- Selector de parcial (partial) -->
-              <select
-                v-model="selectedPartial"
-                class="form-select w-auto"
-                aria-label="Seleccionar parcial"
-              >
+              <!-- Selector de parcial -->
+              <select v-model="selectedPartial" class="form-select w-auto" aria-label="Seleccionar parcial">
                 <option disabled value="">Seleccionar parcial</option>
                 <option v-for="partial in partials" :key="partial" :value="partial">
                   {{ partial }}
@@ -48,11 +43,13 @@
               </tr>
             </thead>
             <tbody>
+              <!-- Encabezado de la tabla con el parcial seleccionado -->
               <tr>
                 <th scope="row" class="text-white" style="background-color: #adadad" colspan="4">
                   {{ selectedPartial }}
                 </th>
               </tr>
+              <!-- Datos de calificaciones -->
               <tr v-for="(carga, index) in filteredData" :key="index">
                 <th scope="row">{{ carga.ASIGNATURA }}</th>
                 <td>{{ carga.OBSERVA }}</td>
@@ -73,6 +70,7 @@ import { useToast } from 'vue-toastification';
 import { getAcademicReport, getHistories } from '@/api/get-report-card';
 import { useAuthStore } from '@/modules/auth/stores/auth.store';
 import jsPDF from 'jspdf';
+import autoTable from 'jspdf-autotable';
 
 const authStore = useAuthStore();
 const user = authStore.user;
@@ -82,13 +80,11 @@ const academiReport = ref<any>(null);
 const loading = ref(true);
 const error = ref<string | null>(null);
 const toast = useToast();
-const selectedRank = ref<number | null>(null); // Grado seleccionado
-const selectedPartial = ref<string | null>(null); // Parcial seleccionado
-const histories = ref<any[]>([]); // Almacena los datos de la API
-
-// Opciones para los selectores
-const ranks = ref([1, 2, 3, 4, 5]); // Grados disponibles
-const partials = ref(['PARCIAL_1', 'PARCIAL_2', 'PARCIAL_3']); // Parciales disponibles
+const selectedRank = ref<number | null>(null);
+const selectedPartial = ref<string | null>(null);
+const histories = ref<any[]>([]);
+const ranks = ref([1, 2, 3, 4, 5]);
+const partials = ref(['PARCIAL_1', 'PARCIAL_2', 'PARCIAL_3']);
 
 // Mapeo de parciales a números
 const partialToNumberMap = {
@@ -97,55 +93,88 @@ const partialToNumberMap = {
   PARCIAL_3: 3,
 };
 
-// Obtener datos del estudiante (desde la API)
+// Obtiene datos del estudiante desde la API
 const fetchStudentData = async () => {
   loading.value = true;
   error.value = null;
-
   try {
     const data = await getAcademicReport(matricula);
     academiReport.value = data;
   } catch (err) {
     toast.error('Error con la conexión a la API');
     error.value = 'Periodo académico no completado o no existe el registro.';
-    console.error(err);
   } finally {
     loading.value = false;
   }
 };
 
-// Obtener los historiales según el grado y parcial seleccionados
+// Obtiene el historial académico filtrado por grado y parcial
 const fetchHistories = async (rank: number, partial: string) => {
   try {
-    const partialNumber = partialToNumberMap[partial]; // Convertir el parcial a número
+    const partialNumber = partialToNumberMap[partial];
     const data = await getHistories(matricula, rank, partialNumber);
-    histories.value = data.HISTORIAL; // Almacena los datos del historial
+    histories.value = data.HISTORIAL;
   } catch (err) {
     toast.error('Periodo académico no completado o no existe el registro.');
-    console.error(err);
   }
 };
 
-// Observar cambios en el grado o parcial seleccionado
+// Observa cambios en los selectores y actualiza los datos
 watch([selectedRank, selectedPartial], ([newRank, newPartial]) => {
   if (newRank !== null && newPartial !== null) {
-    fetchHistories(newRank, newPartial); // Realiza la consulta a la API con el grado y parcial seleccionados
+    fetchHistories(newRank, newPartial);
   }
 });
 
-// Filtrar los datos según el grado y parcial seleccionados
+// Filtra los datos para la tabla
 const filteredData = computed(() => {
   if (selectedRank.value === null || selectedPartial.value === null) {
-    return []; // No mostrar datos si no se selecciona un grado o parcial
+    return [];
   }
   return histories.value.map((historial) => ({
     ...historial,
-    FALTAS: 0, // Asegúrate de que este campo exista en la API o ajústalo según sea necesario
+    FALTAS: historial.FALTAS || 0,
   }));
 });
 
+// Genera el PDF con los datos de la boleta
+const generatePDF = () => {
+  const doc = new jsPDF();
+  const currentDate = new Date();
+  const dateOptions: Intl.DateTimeFormatOptions = { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' };
+  const parseDate = currentDate.toLocaleDateString('es-ES', dateOptions).toUpperCase();
+
+  doc.setFont('helvetica', 'bold');
+  doc.setFontSize(14);
+  doc.text('EDUCACIÓN MEDIA SUPERIOR A DISTANCIA - COLEGIO DE BACHILLERES', 15, 15);
+
+  doc.setFont('helvetica', 'normal');
+  doc.setFontSize(9);
+  doc.text('EMSAD 217 SOCONUSCO  TURNO MATUTINO  CLAVE 07EMS0152W  PERIODO', 25, 25);
+  doc.text(`SOCONUSCO, CHIAPAS. A ${parseDate}`, 60, 35);
+  doc.setFontSize(9);
+  doc.text(`CONCETRADO DE CALIFICACIONES CORRESPONDIENTE AL ${selectedPartial.value}           GRADO: ${selectedRank.value} GRUPO: ${academiReport.value.GRUPO} `, 25, 45);
+
+  if (academiReport.value) {
+    doc.setFontSize(9);
+    doc.text(`Alumno: ${academiReport.value.NOMBRES} ${academiReport.value.APELLIDOS}                           Matrícula: ${matricula}`, 50, 60);
+  }
+
+  autoTable(doc, {
+    startY: 70,
+    head: [['Asignatura', 'Estatus', 'Calificación', 'Faltas']],
+    body: filteredData.value.map((carga) => [
+      carga.ASIGNATURA,
+      carga.OBSERVA,
+      carga[selectedPartial.value],
+      carga.FALTAS,
+    ]),
+  });
+
+  doc.save(`Boleta_de_Calificaciones_${matricula}.pdf`);
+};
+
 onMounted(() => {
-  // Inicializar con el primer grado y parcial si es necesario
   if (ranks.value.length > 0 && partials.value.length > 0) {
     selectedRank.value = ranks.value[0];
     selectedPartial.value = partials.value[0];

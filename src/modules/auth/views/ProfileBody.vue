@@ -20,7 +20,7 @@
         </svg>
         <div class="p-4 mb-2 bg-transparent text-body"></div>
         <h3><strong>Semestre:</strong> {{ student?.GRADO || 'Cargando...' }}</h3>
-        <h3><strong>Nombre:</strong> {{ student?.GRUPO }}</h3>
+        <h3><strong>Grupo:</strong> {{ student?.GRUPO }}</h3>
       </div>
       <div class="col-md-6 my-4 text-center">
         <h2><strong>Nombre:</strong></h2>
