@@ -1,8 +1,8 @@
-// modules/auth/actions/loginAction.ts
 import { CobachApi } from '@/api/CobachApi';
 import type { AuthResponse, StudentData } from '../interfaces';
 import { isAxiosError } from 'axios';
 
+// Definiendo la funcion para autenticar al usuario
 export interface LoginError {
   ok: false;
   message: string;

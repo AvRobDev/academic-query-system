@@ -1,3 +1,4 @@
+// Creando interfaces para la respuesta de autenticación
 export interface AuthResponse {
   token: string;
   student_data: StudentData;

@@ -4,6 +4,7 @@ import { AuthStatus, type StudentData } from '../interfaces';
 import { loginAction } from '../actions';
 import { useLocalStorage } from '@vueuse/core';
 
+// Almacenamiento del estado de autenticación
 export const useAuthStore = defineStore('auth', () => {
   const authStatus = ref<AuthStatus>(AuthStatus.Checking);
   const student = ref<StudentData | undefined>();
@@ -33,10 +34,6 @@ export const useAuthStore = defineStore('auth', () => {
     token.value = '';
     return false;
   };
-
-  // const studentMatricula = computed(() => {
-  //   return student.value ? student.value.MATRICULA : undefined;
-  // });
 
   return {
     student,

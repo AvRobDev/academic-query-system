@@ -1,5 +1,3 @@
-// import type { RouteRecordRaw } from "vue-router";
-// import { createRouter, createWebHistory } from 'vue-router';
 
 export const authRoutes = [
   {
@@ -21,5 +19,3 @@ export const authRoutes = [
 
 ]
 
-
-// export default router;

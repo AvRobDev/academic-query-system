@@ -1,8 +1,8 @@
-// stores/auth.store.ts
 import { defineStore } from 'pinia';
 import { loginAction } from '@/modules/auth/actions';
 import type { StudentData } from '@/modules/auth/interfaces';
 
+// Almacenamiento del estado de autenticación
 interface AuthState {
   user: StudentData | null;
   token: string | null;

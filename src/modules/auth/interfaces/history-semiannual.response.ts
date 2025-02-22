@@ -1,3 +1,4 @@
+// Creando la interfaz para la respuesta de historial semestral
 export interface SemiannualHistory {
   MATRICULA: string;
   NOMBRES: string;
