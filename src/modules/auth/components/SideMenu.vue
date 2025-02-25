@@ -1,5 +1,5 @@
 <template>
-  <div class="col-md-2 sidebar">
+  <div class="col-md-2 sidebar" :class="{ expanded: isExpanded }">
     <div class="text-center mb-3">
       <img
         src="/src/icons/cobach-logo.png"
@@ -9,7 +9,7 @@
       />
     </div>
     <div class="p-1 mb-2 bg-transparent text-body"></div>
-    <h5 class="sidebar-title text-center">Plantel 217</h5>
+    <h5 class="sidebar-title text-center fw-bold">Plantel 217</h5>
     <div class="p-2 mb-2 bg-transparent text-body"></div>
     <ul class="nav flex-column">
       <li class="nav-item mb-3">
@@ -34,17 +34,85 @@
         </button>
       </li>
     </ul>
+    <button class="toggle-btn" @click="toggleSidebar" aria-label="Toggle Sidebar" v-if="isMobile">
+      <i class="bi" :class="isExpanded ? 'bi-chevron-up' : 'bi-chevron-down'"></i>
+    </button>
   </div>
 </template>
 
 <script setup lang="ts">
+import { ref, onMounted, onBeforeUnmount } from 'vue';
 import { useAuthStore } from '@/stores/auth.store';
 
+// Estado reactivo
+const isExpanded = ref(true);
+const isMobile = ref(false);
+
+// Instancia del store de autenticación
 const authStore = useAuthStore();
 
+// Función de logout
 const logout = () => {
   authStore.clearUser();
-  // Redirigir al usuario a la página de login o a la página principal
   window.location.href = '/login';
 };
+
+// Función para alternar la sidebar
+const toggleSidebar = () => {
+  isExpanded.value = !isExpanded.value;
+};
+
+// Función para verificar si es móvil
+const checkIfMobile = () => {
+  isMobile.value = window.innerWidth <= 768;
+};
+
+// Ciclo de vida
+onMounted(() => {
+  checkIfMobile();
+  window.addEventListener('resize', checkIfMobile);
+});
+
+onBeforeUnmount(() => {
+  window.removeEventListener('resize', checkIfMobile);
+});
 </script>
+
+<style scoped>
+@media (max-width: 768px) {
+  .sidebar {
+    max-height: 170px;
+    overflow-y: hidden;
+    transition: max-height 0.3s ease-in-out;
+  }
+
+  .sidebar.expanded {
+    max-height: 400px;
+    overflow-y: auto;
+  }
+
+  .toggle-btn {
+    background-color: transparent;
+    border: none;
+    padding: 10px;
+    cursor: pointer;
+    position: absolute;
+    top: 20px;
+    right: 10px;
+  }
+
+  .toggle-btn i {
+    font-size: 1.5rem;
+  }
+
+  .toggle-btn {
+    display: block;
+  }
+}
+
+@media (min-width: 769px) {
+  .toggle-btn {
+    display: none;
+  }
+}
+</style>

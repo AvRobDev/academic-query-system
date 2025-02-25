@@ -6,22 +6,20 @@
     <div v-else>
       <div class="card" ref="reportContent">
         <div class="card-header">
-          <div class="d-flex justify-content-between align-items-center">
-            <!-- Nombre del estudiante -->
-            <p class="mb-0">{{ academiReport.NOMBRES }} {{ academiReport.APELLIDOS }}</p>
-            <!-- Botón para descargar PDF -->
+          <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center">
+            <p class="mb-2 mb-md-0 text-center text-md-start">
+              {{ academiReport.NOMBRES }} {{ academiReport.APELLIDOS }}
+            </p>
             <button type="button" class="btn btn-primary w-40" @click="generatePDF">
               Descargar PDF
             </button>
-            <div class="d-flex gap-2">
-              <!-- Selector de grado -->
-              <select v-model="selectedRank" class="form-select w-auto" aria-label="Seleccionar grado">
+            <div class="d-flex flex-column flex-sm-row gap-2">
+              <select v-model="selectedRank" class="form-select w-auto" aria-label="Seleccionar semestre">
                 <option disabled value="">Seleccionar semestre</option>
                 <option v-for="rank in ranks" :key="rank" :value="rank">
                   {{ rank }}
                 </option>
               </select>
-              <!-- Selector de parcial -->
               <select v-model="selectedPartial" class="form-select w-auto" aria-label="Seleccionar parcial">
                 <option disabled value="">Seleccionar parcial</option>
                 <option v-for="partial in partials" :key="partial" :value="partial">
@@ -32,37 +30,46 @@
           </div>
         </div>
         <div class="card-body">
-          <h6 class="card-title">Historial de las calificaciones</h6>
-          <table class="table border mb-4">
-            <thead>
-              <tr>
-                <th scope="col">Asignatura</th>
-                <th scope="col">Estatus</th>
-                <th scope="col">Calificación</th>
-                <th scope="col">Faltas</th>
-              </tr>
-            </thead>
-            <tbody>
-              <!-- Encabezado de la tabla con el parcial seleccionado -->
-              <tr>
-                <th scope="row" class="text-white" style="background-color: #adadad" colspan="4">
-                  {{ selectedPartial }}
-                </th>
-              </tr>
-              <!-- Datos de calificaciones -->
-              <tr v-for="(carga, index) in filteredData" :key="index">
-                <th scope="row">{{ carga.ASIGNATURA }}</th>
-                <td>{{ carga.OBSERVA }}</td>
-                <td>{{ carga[selectedPartial] }}</td>
-                <td>{{ carga.FALTAS }}</td>
-              </tr>
-            </tbody>
-          </table>
+          <h6 class="card-title text-center text-md-start">Historial de las calificaciones</h6>
+          <div class="table-responsive">
+            <table class="table border mb-4">
+              <thead>
+                <tr>
+                  <th scope="col">Asignatura</th>
+                  <th scope="col">Estatus</th>
+                  <th scope="col">Calificación</th>
+                  <th scope="col">Faltas</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <th scope="row" class="text-white text-center" style="background-color: #adadad" colspan="4">
+                    {{ selectedPartial }}
+                  </th>
+                </tr>
+                <tr v-for="(carga, index) in filteredData" :key="index">
+                  <th scope="row">{{ carga.ASIGNATURA }}</th>
+                  <td>{{ carga.OBSERVA }}</td>
+                  <td>{{ carga[selectedPartial] }}</td>
+                  <td>{{ carga.FALTAS }}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
         </div>
       </div>
     </div>
   </div>
 </template>
+
+<style scoped>
+@media (max-width: 576px) {
+  .form-select {
+    width: 100% !important; 
+  }
+}
+</style>
 
 <script lang="ts" setup>
 import { ref, onMounted, watch, computed } from 'vue';
