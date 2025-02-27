@@ -10,6 +10,7 @@
     </div>
     <div class="p-1 mb-2 bg-transparent text-body"></div>
     <h5 class="sidebar-title text-center fw-bold">Plantel 217</h5>
+    <h5 class="sidebar-title text-center fw-bold">Soconusco</h5>
     <div class="p-2 mb-2 bg-transparent text-body"></div>
     <ul class="nav flex-column">
       <li class="nav-item mb-3">
@@ -27,6 +28,7 @@
           <i class="bi bi-clock-history me-2"></i> Historial Académico
         </router-link>
       </li>
+      <div class="p-1 mb-2 bg-transparent text-body"></div>
       <!-- Botón de Logout -->
       <li class="nav-item">
         <button class="nav-link text-dark d-flex align-items-center" @click="logout">
