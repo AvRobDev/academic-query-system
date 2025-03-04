@@ -100,13 +100,17 @@ const loading = ref(true);
 const error = ref<string | null>(null);
 const toast = useToast();
 const selectedRank = ref<number | null>(null);
-const selectedPartial = ref<string | null>(null);
+const selectedPartial = ref<string | any>();
 const histories = ref<any[]>([]);
 const ranks = ref([1, 2, 3, 4, 5]);
 const partials = ref(['PARCIAL_1', 'PARCIAL_2', 'PARCIAL_3']);
 
 // Mapeo de parciales a números
-const partialToNumberMap = {
+type partialToNumberMap = {
+  [key: string]: number;
+};
+
+const partialToNumberMap: partialToNumberMap = {
   PARCIAL_1: 1,
   PARCIAL_2: 2,
   PARCIAL_3: 3,
@@ -117,6 +121,7 @@ const fetchStudentData = async () => {
   loading.value = true;
   error.value = null;
   try {
+    console.log('matricula', matricula);
     const data = await getAcademicReport(matricula);
     academiReport.value = data;
   } catch (err) {

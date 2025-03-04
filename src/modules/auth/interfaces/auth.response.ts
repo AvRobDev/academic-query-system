@@ -5,7 +5,7 @@ export interface AuthResponse {
 }
 
 export interface StudentData {
-  MATRICULA: string;
+  MATRICULA: string | any;
   NOMBRES: string;
   APELLIDOS: string;
   CURP: string;
