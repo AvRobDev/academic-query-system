@@ -42,7 +42,7 @@
 <script lang="ts" setup>
 import logo from '@/icons/cobach-logo.png';
 import { reactive, ref } from 'vue';
-import { useAuthStore } from '../stores/auth.store';
+import { useAuthStore } from '@/stores/auth.store';
 import { useToast } from 'vue-toastification';
 import { useRouter } from 'vue-router';
 

@@ -1,5 +1,5 @@
 import { CobachApi } from "@/api/CobachApi";
-import { useAuthStore } from "@/modules/auth/stores/auth.store";
+import { useAuthStore } from "@/stores/auth.store";
 
 /**
  * @description - Obteniendo la información del estudiante dede la API utilizando su matrícula.
@@ -21,7 +21,7 @@ import { useAuthStore } from "@/modules/auth/stores/auth.store";
 // Obteniendo la instancia desde el store de autenticacion
 const authStore = useAuthStore();
 // Obteniendo la matricula desde el store de autenticacion
-const matricula = authStore.student?.MATRICULA
+const matricula = authStore.user?.MATRICULA
 
 // Solicitud para obtener los datos del estudiante a la API
 export const getStudent = async () => {

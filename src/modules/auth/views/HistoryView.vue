@@ -61,7 +61,7 @@
 
 <script lang="ts" setup>
 import { ref, onMounted, computed, watch } from 'vue';
-import { useAuthStore } from '@/modules/auth/stores/auth.store';
+import { useAuthStore } from '@/stores/auth.store';
 import { getHistoriesSemiannual } from '@/api/get-academic-history'; // Asegúrate de importar la función correcta
 import { useToast } from 'vue-toastification';
 

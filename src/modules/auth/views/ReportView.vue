@@ -14,13 +14,21 @@
               Descargar PDF
             </button>
             <div class="d-flex flex-column flex-sm-row gap-2">
-              <select v-model="selectedRank" class="form-select w-auto" aria-label="Seleccionar semestre">
+              <select
+                v-model="selectedRank"
+                class="form-select w-auto"
+                aria-label="Seleccionar semestre"
+              >
                 <option disabled value="">Seleccionar semestre</option>
                 <option v-for="rank in ranks" :key="rank" :value="rank">
                   {{ rank }}
                 </option>
               </select>
-              <select v-model="selectedPartial" class="form-select w-auto" aria-label="Seleccionar parcial">
+              <select
+                v-model="selectedPartial"
+                class="form-select w-auto"
+                aria-label="Seleccionar parcial"
+              >
                 <option disabled value="">Seleccionar parcial</option>
                 <option v-for="partial in partials" :key="partial" :value="partial">
                   {{ partial }}
@@ -43,7 +51,12 @@
               </thead>
               <tbody>
                 <tr>
-                  <th scope="row" class="text-white text-center" style="background-color: #adadad" colspan="4">
+                  <th
+                    scope="row"
+                    class="text-white text-center"
+                    style="background-color: #adadad"
+                    colspan="4"
+                  >
                     {{ selectedPartial }}
                   </th>
                 </tr>
@@ -56,7 +69,6 @@
               </tbody>
             </table>
           </div>
-
         </div>
       </div>
     </div>
@@ -66,7 +78,7 @@
 <style scoped>
 @media (max-width: 576px) {
   .form-select {
-    width: 100% !important; 
+    width: 100% !important;
   }
 }
 </style>
@@ -75,7 +87,7 @@
 import { ref, onMounted, watch, computed } from 'vue';
 import { useToast } from 'vue-toastification';
 import { getAcademicReport, getHistories } from '@/api/get-report-card';
-import { useAuthStore } from '@/modules/auth/stores/auth.store';
+import { useAuthStore } from '@/stores/auth.store';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 
@@ -148,7 +160,12 @@ const filteredData = computed(() => {
 const generatePDF = () => {
   const doc = new jsPDF();
   const currentDate = new Date();
-  const dateOptions: Intl.DateTimeFormatOptions = { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' };
+  const dateOptions: Intl.DateTimeFormatOptions = {
+    weekday: 'long',
+    day: 'numeric',
+    month: 'long',
+    year: 'numeric',
+  };
   const parseDate = currentDate.toLocaleDateString('es-ES', dateOptions).toUpperCase();
 
   doc.setFont('helvetica', 'bold');
@@ -160,11 +177,19 @@ const generatePDF = () => {
   doc.text('EMSAD 217 SOCONUSCO  TURNO MATUTINO  CLAVE 07EMS0152W', 53, 25);
   doc.text(`SOCONUSCO, CHIAPAS.  A ${parseDate}`, 55, 35);
   doc.setFontSize(9);
-  doc.text(`CONCENTRADO DE CALIFICACIONES CORRESPONDIENTE AL ${selectedPartial.value}           GRADO: ${selectedRank.value} GRUPO: ${academiReport.value.GRUPO} `, 25, 45);
+  doc.text(
+    `CONCENTRADO DE CALIFICACIONES CORRESPONDIENTE AL ${selectedPartial.value}           GRADO: ${selectedRank.value} GRUPO: ${academiReport.value.GRUPO} `,
+    25,
+    45,
+  );
 
   if (academiReport.value) {
     doc.setFontSize(9);
-    doc.text(`Alumno: ${academiReport.value.NOMBRES} ${academiReport.value.APELLIDOS}                           Matrícula: ${matricula}`, 50, 60);
+    doc.text(
+      `Alumno: ${academiReport.value.NOMBRES} ${academiReport.value.APELLIDOS}                           Matrícula: ${matricula}`,
+      50,
+      60,
+    );
   }
 
   autoTable(doc, {
