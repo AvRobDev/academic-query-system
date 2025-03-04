@@ -160,7 +160,7 @@ const generatePDF = () => {
   doc.text('EMSAD 217 SOCONUSCO  TURNO MATUTINO  CLAVE 07EMS0152W', 53, 25);
   doc.text(`SOCONUSCO, CHIAPAS.  A ${parseDate}`, 55, 35);
   doc.setFontSize(9);
-  doc.text(`CONCENTRADO DE CALIFICACIONES CORRESPONDIENTE AL ${selectedPartial.value}           GRADO: ${selectedRank.value} GRUPO: ${academiReport.value.GRUPO} `, 25, 45);
+  doc.text(`CONCENTRADO DE CALIFICACIONES CORRESPONDIENTE AL ${selectedPartial.value?.replace('_', ' ')}           GRADO: ${selectedRank.value} GRUPO: ${academiReport.value.GRUPO} `, 25, 45);
 
   if (academiReport.value) {
     doc.setFontSize(9);
