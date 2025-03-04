@@ -59,17 +59,14 @@ const logout = () => {
   window.location.href = '/login';
 };
 
-// Función para alternar la sidebar
 const toggleSidebar = () => {
   isExpanded.value = !isExpanded.value;
 };
 
-// Función para verificar si es móvil
 const checkIfMobile = () => {
   isMobile.value = window.innerWidth <= 768;
 };
 
-// Ciclo de vida
 onMounted(() => {
   checkIfMobile();
   window.addEventListener('resize', checkIfMobile);
@@ -81,15 +78,16 @@ onBeforeUnmount(() => {
 </script>
 
 <style scoped>
+
 @media (max-width: 768px) {
   .sidebar {
-    max-height: 170px;
+    max-height: 180px;
     overflow-y: hidden;
     transition: max-height 0.3s ease-in-out;
   }
 
   .sidebar.expanded {
-    max-height: 400px;
+    max-height: 480px;
     overflow-y: auto;
   }
 

@@ -21,36 +21,37 @@
           </option>
         </select>
       </div>
-      <!-- Tabla de calificaciones -->
-      <div class="card-body">
+      <div class="card-body col-md-12">
         <h6 class="card-title text-secondary">Semestre B 2024</h6>
-        <table class="table table-bordered table-striped table-hover">
-          <thead class="table">
-            <tr>
-              <th scope="col">Asignatura</th>
-              <th scope="col" class="text-center">Estatus</th>
-              <th scope="col" class="text-center">Parcial 1</th>
-              <th scope="col" class="text-center">Parcial 2</th>
-              <th scope="col" class="text-center">Parcial 3</th>
-              <th scope="col">Observaciones</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td class="text-white bg-secondary" colspan="6">
-                Estatus academico - {{ user?.STATUSA }}
-              </td>
-            </tr>
-            <tr v-for="(carga, index) in academicHistory" :key="index">
-              <td>{{ carga.ASIGNATURA }}</td>
-              <td class="text-center">{{ carga.OBSERVA || 'N/A' }}</td>
-              <td class="text-center">{{ carga.PARCIAL_1 || 'Sin datos' }}</td>
-              <td class="text-center">{{ carga.PARCIAL_2 || 'Sin datos' }}</td>
-              <td class="text-center">{{ carga.PARCIAL_3 || 'Sin datos' }}</td>
-              <td>{{ carga.OBSERVA || 'Sin observaciones' }}</td>
-            </tr>
-          </tbody>
-        </table>
+        <div class="table-responsive">
+          <table class="table table-bordered table-striped table-hover">
+            <thead class="table">
+              <tr>
+                <th scope="col">Asignatura</th>
+                <th scope="col" class="text-center">Estatus</th>
+                <th scope="col" class="text-center">Parcial 1</th>
+                <th scope="col" class="text-center">Parcial 2</th>
+                <th scope="col" class="text-center">Parcial 3</th>
+                <th scope="col">Observaciones</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="text-white bg-secondary" colspan="6">
+                  Estatus académico - {{ user?.STATUSA }}
+                </td>
+              </tr>
+              <tr v-for="(carga, index) in academicHistory" :key="index">
+                <td>{{ carga.ASIGNATURA }}</td>
+                <td class="text-center">{{ carga.OBSERVA || 'N/A' }}</td>
+                <td class="text-center">{{ carga.PARCIAL_1 || 'Sin datos' }}</td>
+                <td class="text-center">{{ carga.PARCIAL_2 || 'Sin datos' }}</td>
+                <td class="text-center">{{ carga.PARCIAL_3 || 'Sin datos' }}</td>
+                <td>{{ carga.OBSERVA || 'Sin observaciones' }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
         <div class="text-center">
           <h5 class="text-secondary">Promedio Final: {{ averageFinal }}</h5>
         </div>
