@@ -102,6 +102,7 @@ const toast = useToast();
 const selectedRank = ref<number | null>(null);
 const selectedPartial = ref<string | any>();
 const histories = ref<any[]>([]);
+const scores = ref<any>();
 const ranks = ref([1, 2, 3, 4, 5]);
 const partials = ref(['PARCIAL_1', 'PARCIAL_2', 'PARCIAL_3']);
 
@@ -121,7 +122,6 @@ const fetchStudentData = async () => {
   loading.value = true;
   error.value = null;
   try {
-    console.log('matricula', matricula);
     const data = await getAcademicReport(matricula);
     academiReport.value = data;
   } catch (err) {
@@ -138,6 +138,7 @@ const fetchHistories = async (rank: number, partial: string) => {
     const partialNumber = partialToNumberMap[partial];
     const data = await getHistories(matricula, rank, partialNumber);
     histories.value = data.HISTORIAL;
+    scores.value = data.DETALLES; //Constante para jalar promedio
   } catch (err) {
     toast.error('Periodo académico no completado o no existe el registro.');
   }
@@ -208,6 +209,7 @@ const generatePDF = () => {
     ]),
   });
 
+  doc.text(`PROMEDIO FINAL: ${scores.value.PROMEDIO_FINAL}`, 90, 150);
   doc.save(`Boleta_de_Calificaciones_${matricula}.pdf`);
 };
 
