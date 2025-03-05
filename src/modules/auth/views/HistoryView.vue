@@ -1,7 +1,12 @@
 <template>
   <div>
     <div v-if="loading">Cargando datos...</div>
-    <div v-else-if="error" class="text-danger">Error: {{ error }}</div>
+    <div v-else-if="error" class="error-container">
+      <button @click="reloadPage" class="btn btn-retry" aria-label="Regresar">
+        <i class="bi bi-arrow-clockwise"></i>
+        <span>{{ error }}</span>
+      </button>
+    </div>
     <div v-else>
       <div class="col-md-10">
         <h5>Concentrado de calificaciones correspondiente al semestre {{ user?.GRADO }}</h5>
@@ -22,7 +27,7 @@
         </select>
       </div>
       <div class="card-body col-md-12">
-        <h6 class="card-title text-secondary">Semestre B 2024</h6>
+        <h6 class="card-title text-secondary"></h6>
         <div class="table-responsive">
           <table class="table table-bordered table-striped table-hover">
             <thead class="table">
@@ -79,6 +84,10 @@ const selectedRank = ref<number | null>(null); // Semestre seleccionado
 // Opciones para el selector de semestre
 const ranks = ref([1, 2, 3, 4, 5, 6]); // Semestres disponibles
 
+const reloadPage = () => {
+  window.location.reload();
+};
+
 // Obtener datos del historial semestral (desde la API)
 const fetchHistoriesSemiannual = async (rank: number) => {
   loading.value = true;
@@ -93,8 +102,8 @@ const fetchHistoriesSemiannual = async (rank: number) => {
     academicHistory.value = data.HISTORIAL; // Almacena los datos del historial
     console.log('Datos recibidos:', data);
   } catch (err) {
-    toast.error('Error con la conexión a la API');
-    error.value = 'Periodo académico no completado o no existe el registro.';
+    toast.error(' Periodo académico no completado o no existe el registro.');
+    error.value = ' Periodo académico no completado o no existe el registro.';
     console.error(err);
   } finally {
     loading.value = false;
@@ -122,7 +131,43 @@ const averageFinal = computed(() => {
 onMounted(() => {
   // Inicializar con el primer semestre si es necesario
   if (ranks.value.length > 0) {
-    selectedRank.value = ranks.value[2];
+    selectedRank.value = ranks.value[1];
   }
 });
 </script>
+
+<style scoped>
+/* Estilos para el contenedor del error */
+.error-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #ffffff; /* Fondo rojo claro similar a la imagen */
+  border: 1px solid #ffffff;
+  border-radius: 4px;
+  padding: 10px 15px;
+  margin: 1rem 0;
+  color: #721c24; /* Color de texto rojo oscuro */
+}
+
+/* Estilo para el mensaje de error */
+.error-message {
+  margin-right: 15px; /* Espacio entre el mensaje y el botón */
+  font-weight: 500;
+}
+
+/* Estilo para el botón */
+.btn-retry {
+  background-color: #dc3545; /* Color rojo similar al de la imagen */
+  border: none;
+  color: white;
+  padding: 5px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.btn-retry:hover {
+  background-color: #c82333; /* Tono más oscuro al pasar el mouse */
+}
+</style>
