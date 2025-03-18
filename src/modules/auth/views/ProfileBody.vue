@@ -30,8 +30,14 @@
         <h3>{{ student?.MATRICULA || 'Cargando..' }}</h3>
         <div class="p-2 mb-2 bg-transparent text-body"></div>
         <h2><strong>Estatus Académico:</strong></h2>
-        <h3>{{ student?.STATUSA || 'Cargando..' }}</h3>
-        <div class="p-2 mb-2 bg-transparent text-body"></div>
+        <h3>
+        {{
+          student?.STATUSA === 'RE' ? 'Regular' :
+          student?.STATUSA === 'IE' ? 'Irregular' :
+          'Cargando..'
+        }}
+      </h3>
+      <div class="p-2 mb-2 bg-transparent text-body"></div>
         <h2><strong>CURP:</strong></h2>
         <h3>{{ student?.CURP || 'Cragando..' }}</h3>
       </div>
