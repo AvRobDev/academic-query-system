@@ -210,7 +210,7 @@ const generatePDF = () => {
   });
 
   doc.text(`PROMEDIO FINAL: ${scores.value.PROMEDIO_FINAL}`, 90, 150);
-  doc.save(`Boleta_de_Calificaciones_${matricula}.pdf`);
+  doc.save(`${matricula}_Boleta_de_Calificaciones.pdf`);
 };
 
 onMounted(() => {
