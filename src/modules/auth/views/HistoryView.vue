@@ -8,12 +8,9 @@
       </button>
     </div>
     <div v-else>
-      <div class="col-md-10">
-        <h5>Concentrado de calificaciones correspondiente al semestre {{ user?.GRADO }}</h5>
-      </div>
       <!-- Selector de semestre (rank) -->
-      <div class="mb-3">
-        <label for="rank-select" class="form-label">Seleccionar semestre:</label>
+      <div class="p-2 mb-1">
+        <label for="rank-select" class="form-label">Seleccionar semestre</label>
         <select
           id="rank-select"
           v-model="selectedRank"
@@ -43,7 +40,6 @@
             <tbody>
               <tr>
                 <td class="text-white bg-secondary" colspan="6">
-                  Estatus académico - {{ user?.STATUSA }}
                 </td>
               </tr>
               <tr v-for="(carga, index) in academicHistory" :key="index">
