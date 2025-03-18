@@ -100,7 +100,6 @@ const fetchHistoriesSemiannual = async (rank: number) => {
 
     const data = await getHistoriesSemiannual(matricula, rank);
     academicHistory.value = data.HISTORIAL; // Almacena los datos del historial
-    console.log('Datos recibidos:', data);
   } catch (err) {
     toast.error(' Periodo académico no completado o no existe el registro.');
     error.value = ' Periodo académico no completado o no existe el registro.';
@@ -131,7 +130,7 @@ const averageFinal = computed(() => {
 onMounted(() => {
   // Inicializar con el primer semestre si es necesario
   if (ranks.value.length > 0) {
-    selectedRank.value = ranks.value[1];
+    selectedRank.value = ranks.value[0];
   }
 });
 </script>
