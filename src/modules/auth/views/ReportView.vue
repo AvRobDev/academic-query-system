@@ -10,7 +10,7 @@
             <p class="mb-2 mb-md-0 text-center text-md-start">
               {{ academiReport.NOMBRES }} {{ academiReport.APELLIDOS }}
             </p>
-            <button type="button" class="btn btn-primary w-40" @click="generatePDF">
+            <button type="button" class="btn btn-secondary w-40" @click="generatePDF">
               Descargar PDF
             </button>
             <div class="d-flex flex-column flex-sm-row gap-2">
@@ -31,22 +31,21 @@
               >
                 <option disabled value="">Seleccionar parcial</option>
                 <option v-for="partial in partials" :key="partial" :value="partial">
-                  {{ partial }}
+                  {{ partial.replace('_', ' ') }}
                 </option>
               </select>
             </div>
           </div>
         </div>
         <div class="card-body">
-          <h6 class="card-title text-center text-md-start">Historial de las calificaciones</h6>
           <div class="table-responsive">
             <table class="table border mb-4">
               <thead>
                 <tr>
-                  <th scope="col">Asignatura</th>
-                  <th scope="col">Estatus</th>
-                  <th scope="col">Calificación</th>
-                  <th scope="col">Faltas</th>
+                  <th scope="col" class="text-center">Asignatura</th>
+                  <th scope="col" class="text-center">Estatus</th>
+                  <th scope="col" class="text-center">Calificación</th>
+                  <th scope="col" class="text-center">Faltas</th>
                 </tr>
               </thead>
               <tbody>
@@ -57,17 +56,20 @@
                     style="background-color: #adadad"
                     colspan="4"
                   >
-                    {{ selectedPartial }}
+                    {{ selectedPartial.replace('_', ' ') }}
                   </th>
                 </tr>
                 <tr v-for="(carga, index) in filteredData" :key="index">
                   <th scope="row">{{ carga.ASIGNATURA }}</th>
-                  <td>{{ carga.OBSERVA }}</td>
-                  <td>{{ carga[selectedPartial] }}</td>
-                  <td>{{ carga.FALTAS }}</td>
+                  <td class="text-center">{{ carga.OBSERVA }}</td>
+                  <td class="text-center">{{ carga[selectedPartial] }}</td>
+                  <td class="text-center">{{ carga.FALTAS }}</td>
                 </tr>
               </tbody>
             </table>
+            <div class="text-center">
+          <h5 class="text-secondary">Promedio Final: {{ scores.PROMEDIO_FINAL }}</h5>
+        </div>
           </div>
         </div>
       </div>
@@ -76,6 +78,7 @@
 </template>
 
 <style scoped>
+
 @media (max-width: 576px) {
   .form-select {
     width: 100% !important;
@@ -105,6 +108,7 @@ const histories = ref<any[]>([]);
 const scores = ref<any>();
 const ranks = ref([1, 2, 3, 4, 5, 6]);
 const partials = ref(['PARCIAL_1', 'PARCIAL_2', 'PARCIAL_3']);
+
 
 // Mapeo de parciales a números
 type partialToNumberMap = {

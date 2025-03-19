@@ -1,6 +1,6 @@
 <template>
   <div class="card-body">
-    <h1 class="text-center"><strong>COLEGIO DE BACHILLERES DE CHIAPAS No. 217</strong></h1>
+    <h1 class="text-center"><strong>COLEGIO DE BACHILLERES DE CHIAPAS PLANTEL 217</strong></h1>
     <h3 class="plantel-name text-center">SOCONUSCO, CHIAPAS</h3>
     <div class="p-4 mb-2 bg-transparent text-body"></div>
     <div class="row">
