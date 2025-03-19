@@ -1,12 +1,6 @@
 <template>
   <div>
     <div v-if="loading">Cargando datos...</div>
-    <div v-else-if="error" class="error-container">
-      <button @click="reloadPage" class="btn btn-retry" aria-label="Regresar">
-        <i class="bi bi-arrow-clockwise"></i>
-        <span>{{ error }}</span>
-      </button>
-    </div>
     <div v-else>
       <div class="col-md-10">
         <h5>Concentrado de calificaciones correspondiente al semestre {{ user?.GRADO }}</h5>
@@ -26,7 +20,17 @@
           </option>
         </select>
       </div>
-      <div class="card-body col-md-12">
+
+      <!-- Mensaje de error -->
+      <div v-if="error" class="error-container">
+        <button @click="reloadPage" class="btn btn-retry" aria-label="Regresar">
+          <i class="bi bi-arrow-clockwise"></i>
+          <span>{{ error }}</span>
+        </button>
+      </div>
+
+      <!-- Card body -->
+      <div v-if="!error" class="card-body col-md-12">
         <h6 class="card-title text-secondary"></h6>
         <div class="table-responsive">
           <table class="table table-bordered table-striped table-hover">
