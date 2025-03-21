@@ -16,11 +16,18 @@
   "dependencies": {
     "@tanstack/vue-query": "^5.61.3",
     "@tanstack/vue-query-devtools": "^5.61.3",
+    "@vueuse/core": "^11.3.0",
     "axios": "^1.7.7",
     "bootstrap": "^5.3.3",
+    "bootstrap-icons": "^1.11.3",
+    "html2canvas": "^1.4.1",
+    "jspdf": "^2.5.2",
+    "jspdf-autotable": "^3.8.4",
     "pinia": "^2.2.6",
     "vue": "^3.5.12",
-    "vue-router": "^4.4.5"
+    "vue-router": "^4.5.0",
+    "vue-toastification": "^2.0.0-rc.5",
+    "vuetify": "^3.7.13"
   },
   "devDependencies": {
     "@tsconfig/node22": "^22.0.0",

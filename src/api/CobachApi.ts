@@ -1,13 +1,27 @@
 import axios from "axios";
 
-const apiKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbnJvbGxtZW50IjoiMjJBMDcxMDIxN00wMDAxIiwiZXhwIjoxNzMyOTEzOTY1fQ.sEsjl_PxTZVVRy3GxBNd5RrntqxFZMrz-JDOx8lv01w'
+/**
+ * @description Instancia de axios para consumir la API de Cobach
+ * @type {AxiosInstance}
+ * @param {string} token - Token de autenticación
+ */
 
 const CobachApi = axios.create({
   baseURL: import.meta.env.VITE_COBACH_API_URL,
-  headers: {
-    Authorization: `Bearer ${apiKey}`
-  }
-})
+});
 
-//TODO:
-export { CobachApi }
+/**
+ * @description Interceptor para agregar el token de autenticación a las peticiones
+ * @param {AxiosRequestConfig} config - Configuración de la petición
+ */
+CobachApi.interceptors.request.use(config => {
+
+  const token = localStorage.getItem('token')
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
+
+  return config;
+});
+
+export { CobachApi };

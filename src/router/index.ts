@@ -1,32 +1,45 @@
-// import SideMenu from '@/modules/academic/components/SideMenu.vue'
-import UserProfile from '@/modules/academic/layouts/UserProfile.vue'
-import { createRouter, createWebHistory } from 'vue-router'
-// import HomeView from '../views/HomeView.vue'
+import { authRoutes } from '@/modules/auth/routes';
+import { createRouter, createWebHistory } from 'vue-router';
+import { useAuthStore } from '@/stores/auth.store';
 
+// Creando e importando las rutas de autenticación
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
     {
       path: '/',
-      name: 'home',
-      component: UserProfile,
+      name: 'auth',
+      redirect: { name: 'login' },
+      component: () => import('@/modules/auth/layouts/AuthLayout.vue'),
       children: [
         {
-          path: '',
-          name: 'profile',
-          component: () => import('@/modules/academic/views/ProfileBody.vue'),
+          path: 'login',
+          name: 'login',
+          component: () => import('@/modules/auth/views/LoginView.vue')
         }
       ]
     },
-    // {
-    //   path: '/about',
-    //   name: 'about',
-    //   // route level code-splitting
-    //   // this generates a separate chunk (About.[hash].js) for this route
-    //   // which is lazy-loaded when the route is visited.
-    //   component: () => import('../views/AboutView.vue'),
-    // },
+    // Auth Routes
+    ...authRoutes,
   ],
-})
+});
 
-export default router
+router.beforeEach((to, from, next) => {
+  const authStore = useAuthStore();
+  const protectedRoutes = ['profile', 'grades', 'history']; // Rutas protegidas
+
+  if (protectedRoutes.includes(to.name as string)) {
+    if (!authStore.token) {
+      // Si no hay token, redirige al login
+      next({ name: 'login' });
+    } else {
+      // Permite el acceso si hay un token
+      next();
+    }
+  } else {
+    // Permite el acceso a rutas no protegidas
+    next();
+  }
+});
+
+export default router;

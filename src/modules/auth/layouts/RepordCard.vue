@@ -6,10 +6,10 @@
       <div class="col-md-10">
         <div class="card mt-4">
           <div class="card-header text-highlight">
-            <h3>Perfil</h3>
+            <h3>Boletas</h3>
           </div>
           <!-- ProfileBody -->
-          <RouterView />
+          <ReportView />
         </div>
       </div>
     </div>
@@ -18,6 +18,7 @@
 
 <script lang="ts" setup>
 import SideMenu from '../components/SideMenu.vue';
+import ReportView from '../views/ReportView.vue';
 </script>
 
 <style scoped>
