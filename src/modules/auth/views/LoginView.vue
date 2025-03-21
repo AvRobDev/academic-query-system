@@ -15,6 +15,7 @@
               name="username"
               class="form-control"
               placeholder="CURP"
+              @input="loginForm.username = loginForm.username.toUpperCase()"
             />
             <label for="username">CURP</label>
           </div>
@@ -27,11 +28,12 @@
               id="password"
               name="password"
               placeholder="Matrícula"
+              @input="loginForm.password = loginForm.password.toUpperCase()"
             />
             <label for="password">Matrícula</label>
           </div>
           <div class="text-center">
-            <button type="submit" class="btn btn-primary w-50">Ingresar</button>
+            <button type="submit" class="btn-cobach w-50">Ingresar</button>
           </div>
         </form>
       </div>
@@ -82,6 +84,12 @@ const onLogin = async () => {
   background-color: #e0f2ff;
 }
 
+.btn-cobach{
+  background-color: rgb(7, 7, 67);
+  border-radius: 10px;
+  color: #e0f2ff;
+  height: 35px;
+}
 .card-img-top {
   width: 50%;
   margin: 0 auto;

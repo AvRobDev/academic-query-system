@@ -33,12 +33,12 @@
           <table class="table table-bordered table-striped table-hover">
             <thead class="table">
               <tr>
-                <th scope="col">Asignatura</th>
+                <th scope="col" class="text-center">Asignatura</th>
                 <th scope="col" class="text-center">Estatus</th>
                 <th scope="col" class="text-center">Parcial 1</th>
                 <th scope="col" class="text-center">Parcial 2</th>
                 <th scope="col" class="text-center">Parcial 3</th>
-                <th scope="col">Observaciones</th>
+                <th scope="col" class="text-center">Observaciones</th>
               </tr>
             </thead>
             <tbody>
@@ -52,7 +52,7 @@
                 <td class="text-center">{{ carga.PARCIAL_1 || 'Sin datos' }}</td>
                 <td class="text-center">{{ carga.PARCIAL_2 || 'Sin datos' }}</td>
                 <td class="text-center">{{ carga.PARCIAL_3 || 'Sin datos' }}</td>
-                <td>{{ carga.OBSERVA || 'Sin observaciones' }}</td>
+                <td class="text-center">{{ carga.OBSERVA || 'Sin observaciones' }}</td>
               </tr>
             </tbody>
           </table>
