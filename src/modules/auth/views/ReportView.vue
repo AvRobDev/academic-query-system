@@ -52,7 +52,7 @@
                 <tr>
                   <th
                     scope="row"
-                    class="text-white text-center"
+                    class="text-white bg-secondary"
                     style="background-color: #adadad"
                     colspan="4"
                   >

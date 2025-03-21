@@ -44,6 +44,7 @@
             <tbody>
               <tr>
                 <td class="text-white bg-secondary" colspan="6">
+                  SEMESTRE {{ selectedRank }}
                 </td>
               </tr>
               <tr v-for="(carga, index) in academicHistory" :key="index">
