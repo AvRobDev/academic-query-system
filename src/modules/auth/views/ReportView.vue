@@ -179,8 +179,8 @@ const generatePDF = () => {
   const parseDate = currentDate.toLocaleDateString('es-ES', dateOptions).toUpperCase();
 
   doc.setFont('helvetica', 'bold');
-  doc.setFontSize(14);
-  doc.text('EDUCACIÓN MEDIA SUPERIOR A DISTANCIA - COLEGIO DE BACHILLERES', 15, 15);
+  doc.setFontSize(12);
+  doc.text('EDUCACIÓN MEDIA SUPERIOR A DISTANCIA - COLEGIO DE BACHILLERES DE CHIAPAS', 15, 15);
 
   doc.setFont('helvetica', 'normal');
   doc.setFontSize(9);
