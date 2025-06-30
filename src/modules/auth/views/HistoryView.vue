@@ -74,12 +74,10 @@ import { useToast } from 'vue-toastification';
 const authStore = useAuthStore();
 const user = authStore.user;
 const matricula = user?.MATRICULA;
-
 const academicHistory = ref<any[]>([]);
 const loading = ref(true);
 const error = ref<string | null>(null);
 const toast = useToast();
-
 const selectedRank = ref<number | null>(null);
 const PROMEDIO = ref<number | null>(null); //
 const ranks = ref([1, 2, 3, 4, 5, 6]);
@@ -94,7 +92,6 @@ const fetchHistoriesSemiannual = async (rank: number) => {
     if (!matricula) {
       throw new Error('No se pudo obtener la matrícula del usuario.');
     }
-
     const data = await getHistoriesSemiannual(matricula, rank);
     academicHistory.value = data.ASIGNATURAS;
     PROMEDIO.value = data.PROMEDIO_FINAL;

@@ -131,8 +131,6 @@ const partialToNumberMap: partialToNumberMap = {
   PARCIAL_3: 3,
 };
 
-
-
 // Obtiene datos del estudiante desde la API
 const fetchStudentData = async () => {
   loading.value = true;
