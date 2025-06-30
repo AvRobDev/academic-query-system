@@ -26,6 +26,7 @@ export const getAcademicHistory = async (matricula: string) => {
 export const getHistoriesSemiannual = async (matricula: string, rank: number) => {
   try {
     const { data } = await CobachApi.get(`/students/${matricula}/academic-histories/semester?rank=${rank}`);
+    //console.log("trae peticion", data);
     return data;
   } catch (error) {
     console.error('Error al obtener el historial', error);
