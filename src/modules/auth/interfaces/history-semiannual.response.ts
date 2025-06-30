@@ -7,11 +7,11 @@ export interface SemiannualHistory {
   GRADO: string;
   GRUPO: string;
   STATUSA: string;
-  CARGA: Carga[];
-  DETALLES: Detalles;
+  ASIGNATURA: Asignatura[];
+  PROMEDIO_FINAL: number;
 }
 
-export interface Carga {
+export interface Asignatura {
   MATRICULA: string;
   CLAVE_IN: string;
   CLAVEMAT: string;
@@ -31,8 +31,4 @@ export interface DatosMateria {
   ASIGNATURA: string;
   CLAVE: string;
   CLAVE_IN: string;
-}
-
-export interface Detalles {
-  PROMEDIO_FINAL: number;
 }

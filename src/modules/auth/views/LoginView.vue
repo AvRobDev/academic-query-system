@@ -4,7 +4,7 @@
       <img :src="logo" class="card-img-top p-3" alt="Logo de la institución" />
       <div class="card-body">
         <h5 class="card-title text-center fw-bold">Iniciar sesión</h5>
-        <p class="text-center">Accede con tu CURP y matrícula para continuar</p>
+        <p class="text-center">Ingresa tu CURP y matrícula para continuar</p>
         <form @submit.prevent="onLogin">
           <div class="form-floating mb-3">
             <input

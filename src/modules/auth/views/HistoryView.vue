@@ -2,7 +2,6 @@
   <div>
     <div v-if="loading">Cargando datos...</div>
     <div v-else>
-      <!-- Selector de semestre (rank) -->
       <div class="p-2 mb-1">
         <label for="rank-select" class="form-label">Seleccionar semestre</label>
         <select
@@ -17,16 +16,12 @@
           </option>
         </select>
       </div>
-
-      <!-- Mensaje de error -->
       <div v-if="error" class="error-container">
         <button @click="reloadPage" class="btn btn-retry" aria-label="Regresar">
           <i class="bi bi-arrow-clockwise"></i>
           <span>{{ error }}</span>
         </button>
       </div>
-
-      <!-- Card body -->
       <div v-if="!error" class="card-body col-md-12">
         <h6 class="card-title text-secondary"></h6>
         <div class="table-responsive">
@@ -47,19 +42,23 @@
                   SEMESTRE {{ selectedRank }}
                 </td>
               </tr>
-              <tr v-for="(carga, index) in academicHistory" :key="index">
-                <td>{{ carga.ASIGNATURA }}</td>
-                <td class="text-center">{{ carga.OBSERVA || 'N/A' }}</td>
-                <td class="text-center">{{ carga.PARCIAL_1 || 'Sin datos' }}</td>
-                <td class="text-center">{{ carga.PARCIAL_2 || 'Sin datos' }}</td>
-                <td class="text-center">{{ carga.PARCIAL_3 || 'Sin datos' }}</td>
-                <td class="text-center">{{ carga.OBSERVA || 'Sin observaciones' }}</td>
+              <tr v-for="(asignatura, index) in academicHistory" :key="index">
+                <td>{{ asignatura.ASIGNATURA }}</td>
+                <td class="text-center">{{ asignatura.OBSERVA || 'N/A' }}</td>
+                <td class="text-center">{{ asignatura.PARCIAL_1 || 'Sin datos' }}</td>
+                <td class="text-center">{{ asignatura.PARCIAL_2 || 'Sin datos' }}</td>
+                <td class="text-center">{{ asignatura.PARCIAL_3 || 'Sin datos' }}</td>
+                <td class="text-center">{{ asignatura.OBSERVA || 'Sin observaciones' }}</td>
               </tr>
             </tbody>
           </table>
         </div>
         <div class="text-center">
-          <h5 class="text-secondary">Promedio Final: {{ averageFinal }}</h5>
+          <h5 class="text-secondary">
+            Promedio Final:
+            <span v-if="PROMEDIO !== null">{{ PROMEDIO }}</span>
+            <span v-else>Cargando promedio...</span>
+          </h5>
         </div>
       </div>
     </div>
@@ -67,29 +66,26 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, onMounted, computed, watch } from 'vue';
+import { ref, onMounted, watch } from 'vue';
 import { useAuthStore } from '@/stores/auth.store';
-import { getHistoriesSemiannual } from '@/api/get-academic-history'; // Asegúrate de importar la función correcta
+import { getHistoriesSemiannual } from '@/api/get-academic-history';
 import { useToast } from 'vue-toastification';
 
 const authStore = useAuthStore();
 const user = authStore.user;
 const matricula = user?.MATRICULA;
 
-const academicHistory = ref<any[]>([]); // Almacena los datos del historial
+const academicHistory = ref<any[]>([]);
 const loading = ref(true);
 const error = ref<string | null>(null);
 const toast = useToast();
-const selectedRank = ref<number | null>(null); // Semestre seleccionado
 
-// Opciones para el selector de semestre
-const ranks = ref([1, 2, 3, 4, 5, 6]); // Semestres disponibles
+const selectedRank = ref<number | null>(null);
+const PROMEDIO = ref<number | null>(null); //
+const ranks = ref([1, 2, 3, 4, 5, 6]);
 
-const reloadPage = () => {
-  window.location.reload();
-};
+const reloadPage = () => window.location.reload();
 
-// Obtener datos del historial semestral (desde la API)
 const fetchHistoriesSemiannual = async (rank: number) => {
   loading.value = true;
   error.value = null;
@@ -100,65 +96,54 @@ const fetchHistoriesSemiannual = async (rank: number) => {
     }
 
     const data = await getHistoriesSemiannual(matricula, rank);
-    academicHistory.value = data.HISTORIAL; // Almacena los datos del historial
+    academicHistory.value = data.ASIGNATURAS;
+    PROMEDIO.value = data.PROMEDIO_FINAL;
   } catch (err) {
-    toast.error(' Periodo académico no completado o no existe el registro.');
-    error.value = ' Periodo académico no completado o no existe el registro.';
+    toast.error('Periodo académico no completado o no existe el registro.');
+    error.value = 'Periodo académico no completado o no existe el registro.';
     console.error(err);
   } finally {
     loading.value = false;
   }
 };
 
-// Observar cambios en el semestre seleccionado
-watch(selectedRank, (newRank) => {
+// Reactualizar datos si el usuario cambia el semestre
+watch(selectedRank, async (newRank) => {
   if (newRank !== null) {
-    fetchHistoriesSemiannual(newRank); // Realiza la consulta a la API con el semestre seleccionado
+    await fetchHistoriesSemiannual(newRank);
   }
 });
 
-// Calcular el promedio final
-const averageFinal = computed(() => {
-  if (academicHistory.value.length === 0) return 0;
-
-  const total = academicHistory.value.reduce((sum, carga) => {
-    return sum + parseFloat(carga.PROMEDIO || 0);
-  }, 0);
-
-  return (total / academicHistory.value.length).toFixed(2); // Promedio con 2 decimales
-});
-
-onMounted(() => {
-  // Inicializar con el primer semestre si es necesario
+// Cargar semestre 1 automáticamente al montar
+onMounted(async () => {
   if (ranks.value.length > 0) {
     selectedRank.value = ranks.value[0];
+    await fetchHistoriesSemiannual(selectedRank.value);
   }
 });
 </script>
 
 <style scoped>
-/* Estilos para el contenedor del error */
 .error-container {
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: #ffffff; /* Fondo rojo claro similar a la imagen */
+  background-color: #ffffff; 
   border: 1px solid #ffffff;
   border-radius: 4px;
   padding: 10px 15px;
   margin: 1rem 0;
-  color: #721c24; /* Color de texto rojo oscuro */
+  color: #721c24; 
 }
 
-/* Estilo para el mensaje de error */
+
 .error-message {
-  margin-right: 15px; /* Espacio entre el mensaje y el botón */
+  margin-right: 15px; 
   font-weight: 500;
 }
 
-/* Estilo para el botón */
 .btn-retry {
-  background-color: #dc3545; /* Color rojo similar al de la imagen */
+  background-color: #dc3545; 
   border: none;
   color: white;
   padding: 5px 10px;
@@ -168,6 +153,6 @@ onMounted(() => {
 }
 
 .btn-retry:hover {
-  background-color: #c82333; /* Tono más oscuro al pasar el mouse */
+  background-color: #c82333; 
 }
 </style>

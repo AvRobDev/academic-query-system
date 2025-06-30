@@ -8,7 +8,8 @@
         <div class="card-header">
           <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center">
             <p class="mb-2 mb-md-0 text-center text-md-start">
-              {{ academiReport.NOMBRES }} {{ academiReport.APELLIDOS }}
+              {{ currentUser.NOMBRES }} {{ currentUser.APELLIDOS }}
+
             </p>
             <button type="button" class="btn btn-secondary w-40" @click="generatePDF">
               Descargar PDF
@@ -59,16 +60,16 @@
                     {{ selectedPartial.replace('_', ' ') }}
                   </th>
                 </tr>
-                <tr v-for="(carga, index) in filteredData" :key="index">
-                  <th scope="row">{{ carga.ASIGNATURA }}</th>
-                  <td class="text-center">{{ carga.OBSERVA }}</td>
-                  <td class="text-center">{{ carga[selectedPartial] }}</td>
-                  <td class="text-center">{{ carga.FALTAS }}</td>
+                <tr v-for="(asignatura, index) in filteredData" :key="index">
+                  <th scope="row">{{ asignatura.ASIGNATURA }}</th>
+                  <td class="text-center">{{ asignatura.OBSERVA }}</td>
+                  <td class="text-center">{{ asignatura[selectedPartial] }}</td>
+                  <td class="text-center">{{ asignatura.FALTAS }}</td>
                 </tr>
               </tbody>
             </table>
             <div class="text-center">
-          <h5 class="text-secondary">Promedio Final: {{ scores.PROMEDIO_FINAL }}</h5>
+          <h5 class="text-secondary">Promedio Final: {{ PROMEDIO }}</h5>
         </div>
           </div>
         </div>
@@ -98,7 +99,6 @@ const authStore = useAuthStore();
 const user = authStore.user;
 const matricula = user?.MATRICULA;
 
-const academiReport = ref<any>(null);
 const loading = ref(true);
 const error = ref<string | null>(null);
 const toast = useToast();
@@ -108,7 +108,17 @@ const histories = ref<any[]>([]);
 const scores = ref<any>();
 const ranks = ref([1, 2, 3, 4, 5, 6]);
 const partials = ref(['PARCIAL_1', 'PARCIAL_2', 'PARCIAL_3']);
+const currentUser = getUser(); 
 
+function getUser() {
+  try {
+    const userData = localStorage.getItem('user');
+    return userData ? JSON.parse(userData) : null;
+  } catch (e) {
+    console.error('Error al parsear datos del usuario:', e);
+    return null;
+  }
+}
 
 // Mapeo de parciales a números
 type partialToNumberMap = {
@@ -121,13 +131,15 @@ const partialToNumberMap: partialToNumberMap = {
   PARCIAL_3: 3,
 };
 
+
+
 // Obtiene datos del estudiante desde la API
 const fetchStudentData = async () => {
   loading.value = true;
   error.value = null;
   try {
     const data = await getAcademicReport(matricula);
-    academiReport.value = data;
+    currentUser.value = data;
   } catch (err) {
     toast.error('Error con la conexión a la API');
     error.value = 'Periodo académico no completado o no existe el registro.';
@@ -137,21 +149,23 @@ const fetchStudentData = async () => {
 };
 
 // Obtiene el historial académico filtrado por grado y parcial
+let PROMEDIO : any;
 const fetchHistories = async (rank: number, partial: string) => {
   try {
     const partialNumber = partialToNumberMap[partial];
     const data = await getHistories(matricula, rank, partialNumber);
-    histories.value = data.HISTORIAL;
-    scores.value = data.DETALLES; //Constante para jalar promedio
+    histories.value = data.ASIGNATURAS;
+    scores.value = data.PROMEDIO_FINAL; //Constante para jalar promedio
+    return data.PROMEDIO_FINAL;
   } catch (err) {
     toast.error('Periodo académico no completado o no existe el registro.');
   }
 };
 
 // Observa cambios en los selectores y actualiza los datos
-watch([selectedRank, selectedPartial], ([newRank, newPartial]) => {
+watch([selectedRank, selectedPartial], async ([newRank, newPartial]) => {
   if (newRank !== null && newPartial !== null) {
-    fetchHistories(newRank, newPartial);
+    PROMEDIO = await fetchHistories (newRank, newPartial);
   }
 });
 
@@ -188,15 +202,15 @@ const generatePDF = () => {
   doc.text(`SOCONUSCO, CHIAPAS.  A ${parseDate}`, 60, 35);
   doc.setFontSize(9);
   doc.text(
-    `CONCENTRADO DE CALIFICACIONES CORRESPONDIENTE AL ${selectedPartial.value?.replace('_', ' ')}           GRADO: ${selectedRank.value} GRUPO: ${academiReport.value.GRUPO} `,
+    `CONCENTRADO DE CALIFICACIONES CORRESPONDIENTE AL ${selectedPartial.value?.replace('_', ' ')}           GRADO: ${selectedRank.value} GRUPO: ${currentUser.GRUPO} `,
     25,
     45,
   );
 
-  if (academiReport.value) {
+  if (currentUser.value) {
     doc.setFontSize(9);
     doc.text(
-      `Alumno: ${academiReport.value.NOMBRES} ${academiReport.value.APELLIDOS}                           Matrícula: ${matricula}`,
+      `Alumno: ${currentUser.NOMBRES} ${currentUser.APELLIDOS}                           Matrícula: ${matricula}`,
       50,
       60,
     );
@@ -205,15 +219,15 @@ const generatePDF = () => {
   autoTable(doc, {
     startY: 70,
     head: [['Asignatura', 'Estatus', 'Calificación', 'Faltas']],
-    body: filteredData.value.map((carga) => [
-      carga.ASIGNATURA,
-      carga.OBSERVA,
-      carga[selectedPartial.value],
-      carga.FALTAS,
+    body: filteredData.value.map((asignatura) => [
+      asignatura.ASIGNATURA,
+      asignatura.OBSERVA,
+      asignatura[selectedPartial.value],
+      asignatura.FALTAS,
     ]),
   });
 
-  doc.text(`PROMEDIO FINAL: ${scores.value.PROMEDIO_FINAL}`, 90, 150);
+  doc.text(`PROMEDIO FINAL: ${PROMEDIO}`, 90, 150);
   doc.save(`${matricula}_Boleta_de_Calificaciones.pdf`);
 };
 
