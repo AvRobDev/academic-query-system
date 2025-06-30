@@ -1,12 +1,6 @@
 <template>
   <div>
     <div v-if="loading">Cargando datos...</div>
-    <div v-else-if="error" class="error-container">
-      <button @click="reloadPage" class="btn btn-retry" aria-label="Regresar">
-        <i class="bi bi-arrow-clockwise"></i>
-        <span>{{ error }}</span>
-      </button>
-    </div>
     <div v-else>
       <!-- Selector de semestre (rank) -->
       <div class="p-2 mb-1">
@@ -23,7 +17,17 @@
           </option>
         </select>
       </div>
-      <div class="card-body col-md-12">
+
+      <!-- Mensaje de error -->
+      <div v-if="error" class="error-container">
+        <button @click="reloadPage" class="btn btn-retry" aria-label="Regresar">
+          <i class="bi bi-arrow-clockwise"></i>
+          <span>{{ error }}</span>
+        </button>
+      </div>
+
+      <!-- Card body -->
+      <div v-if="!error" class="card-body col-md-12">
         <h6 class="card-title text-secondary"></h6>
         <div class="table-responsive">
           <table class="table table-bordered table-striped table-hover">
@@ -40,6 +44,7 @@
             <tbody>
               <tr>
                 <td class="text-white bg-secondary" colspan="6">
+                  SEMESTRE {{ selectedRank }}
                 </td>
               </tr>
               <tr v-for="(carga, index) in academicHistory" :key="index">
