@@ -69,7 +69,7 @@
               </tbody>
             </table>
             <div class="text-center">
-          <h5 class="text-secondary">Promedio Final: {{ PROMEDIO }}</h5>
+          <h5 class="text-secondary">Promedio Final: {{ scores }}</h5>
         </div>
           </div>
         </div>
@@ -147,7 +147,6 @@ const fetchStudentData = async () => {
 };
 
 // Obtiene el historial académico filtrado por grado y parcial
-let PROMEDIO : any;
 const fetchHistories = async (rank: number, partial: string) => {
   try {
     const partialNumber = partialToNumberMap[partial];
@@ -163,7 +162,7 @@ const fetchHistories = async (rank: number, partial: string) => {
 // Observa cambios en los selectores y actualiza los datos
 watch([selectedRank, selectedPartial], async ([newRank, newPartial]) => {
   if (newRank !== null && newPartial !== null) {
-    PROMEDIO = await fetchHistories (newRank, newPartial);
+     fetchHistories (newRank, newPartial);
   }
 });
 
