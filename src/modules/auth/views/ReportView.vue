@@ -224,7 +224,7 @@ const generatePDF = () => {
     ]),
   });
 
-  doc.text(`PROMEDIO FINAL: ${scores}`, 90, 150);
+  doc.text(`PROMEDIO FINAL: ${scores.value}`, 90, 150);
   doc.save(`${matricula}_Boleta_de_Calificaciones.pdf`);
 };
 

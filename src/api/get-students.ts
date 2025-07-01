@@ -27,10 +27,8 @@ const matricula = authStore.user?.MATRICULA
 export const getStudent = async () => {
   try {
     const { data } = await CobachApi.get(`/students/${matricula}`)
-    console.log(data)
     return data // Retorna los datos obtenidos
   } catch (error) {
-    console.log(error);
     throw new Error('Error al obtener estudiante') // Lanza un error si no se puede obtener la información del estudiante
   }
 
