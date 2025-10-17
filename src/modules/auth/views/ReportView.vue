@@ -39,7 +39,7 @@
           </div>
         </div>
         <div class="card-body">
-          <div class="table-responsive text-center">
+          <div class="table-responsive">
             <table class="table border mb-4">
               <thead>
                 <tr>
@@ -53,7 +53,7 @@
                 <tr>
                   <th
                     scope="row"
-                    class="text-white bg-secondary text-center"
+                    class="text-white bg-secondary"
                     style="background-color: #adadad"
                     colspan="4"
                   >
@@ -216,8 +216,19 @@ const generatePDF = () => {
       asignatura[selectedPartial.value],
       asignatura.FALTAS,
     ]),
+    styles: {
+      halign: 'center', 
+      fontSize: 10,
+    },
+  columnStyles: {
+    0: { halign: 'left' }, 
+    1: { halign: 'center' },
+    2: { halign: 'center' },
+    3: { halign: 'center' },
+  },
   });
 
+  doc.setFont('helvetica', 'bold');
   doc.text(`PROMEDIO FINAL: ${scores.value}`, 90, 170);
   doc.save(`${matricula}_Boleta_de_Calificaciones.pdf`);
 };
