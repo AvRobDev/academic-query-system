@@ -39,7 +39,7 @@
           </div>
         </div>
         <div class="card-body">
-          <div class="table-responsive">
+          <div class="table-responsive text-center">
             <table class="table border mb-4">
               <thead>
                 <tr>
@@ -53,7 +53,7 @@
                 <tr>
                   <th
                     scope="row"
-                    class="text-white bg-secondary"
+                    class="text-white bg-secondary text-center"
                     style="background-color: #adadad"
                     colspan="4"
                   >
@@ -120,7 +120,6 @@ function getUser() {
   }
 }
 
-// Mapeo de parciales a números
 type partialToNumberMap = {
   [key: string]: number;
 };
@@ -131,7 +130,6 @@ const partialToNumberMap: partialToNumberMap = {
   PARCIAL_3: 3,
 };
 
-// Obtiene datos del estudiante desde la API
 const fetchStudentData = async () => {
   loading.value = true;
   error.value = null;
@@ -146,27 +144,24 @@ const fetchStudentData = async () => {
   }
 };
 
-// Obtiene el historial académico filtrado por grado y parcial
 const fetchHistories = async (rank: number, partial: string) => {
   try {
     const partialNumber = partialToNumberMap[partial];
     const data = await getHistories(matricula, rank, partialNumber);
     histories.value = data.ASIGNATURAS;
-    scores.value = data.PROMEDIO_FINAL; //Constante para jalar promedio
+    scores.value = data.PROMEDIO_FINAL;
     return data.PROMEDIO_FINAL;
   } catch (err) {
     toast.error('Periodo académico no completado o no existe el registro.');
   }
 };
 
-// Observa cambios en los selectores y actualiza los datos
 watch([selectedRank, selectedPartial], async ([newRank, newPartial]) => {
   if (newRank !== null && newPartial !== null) {
      fetchHistories (newRank, newPartial);
   }
 });
 
-// Filtra los datos para la tabla
 const filteredData = computed(() => {
   if (selectedRank.value === null || selectedPartial.value === null) {
     return [];
@@ -177,7 +172,6 @@ const filteredData = computed(() => {
   }));
 });
 
-// Genera el PDF con los datos de la boleta
 const generatePDF = () => {
   const doc = new jsPDF();
   const currentDate = new Date();
@@ -224,7 +218,7 @@ const generatePDF = () => {
     ]),
   });
 
-  doc.text(`PROMEDIO FINAL: ${scores.value}`, 90, 200);
+  doc.text(`PROMEDIO FINAL: ${scores.value}`, 90, 170);
   doc.save(`${matricula}_Boleta_de_Calificaciones.pdf`);
 };
 
